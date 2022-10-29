@@ -45,10 +45,37 @@ class ProjectInput {
       this.attach();
     }
   
+    private gatherUserInput():[string, string, number] | void {
+      const titleValue = this.titleInputElement.value;
+      const descriptionValue = this.descriptionInputElement.value;
+      const peopleAmountValue = this.peopleAmountInputElement.value;
+
+      if ( titleValue.trim().length === 0 ||
+        descriptionValue.trim().length === 0 ||
+        peopleAmountValue.trim().length === 0
+      ) {
+        alert('Please fill out all the inputs');
+        return;
+      } else {
+        return [titleValue, descriptionValue, Number(peopleAmountValue)];
+      }
+    }
+  
+    private clearInputs() {
+      this.titleInputElement.value = '';
+      this.descriptionInputElement.value = '';
+      this.peopleAmountInputElement.value = '';
+    }
+  
     @autoBind
     private submitHandler(event: Event) {
       event.preventDefault();
-      console.log(this.titleInputElement.value);
+      const userInput = this.gatherUserInput();
+      if (userInput) {
+        const [titleValue, descriptionValue, peopleAmountValue] = userInput;
+        console.log(titleValue, descriptionValue, peopleAmountValue);
+        this.clearInputs();
+      }
     }
   
     private configure() {
