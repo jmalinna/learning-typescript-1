@@ -33,6 +33,37 @@ function autoBind(
   return adjustedDescriptor;
 };
 
+//ProjectList Class
+class ProjectList {
+  templateElement: HTMLTemplateElement;
+  hostElement: HTMLDivElement;
+  sectionElement: HTMLElement;
+
+  constructor(private type: 'Active' | 'Finished') {
+    this.templateElement = document.getElementById(
+      'project-list'
+    )! as HTMLTemplateElement;
+    this.hostElement = document.getElementById('app')! as HTMLDivElement;
+    const importedNode = document.importNode(
+      this.templateElement.content,
+      true
+    );
+    this.sectionElement = importedNode.firstElementChild as HTMLElement;
+    this.sectionElement.id = `${this.type}-projects`;
+
+    this.renderDOM();
+    this.renderDOMContent();
+  }
+
+  private renderDOMContent() {
+    const listId = `${this.type}-project-list`;
+    this.sectionElement.querySelector('ul')!.id = listId;
+    this.sectionElement.querySelector('h2')!.textContent = this.type + ' projects';
+  }
+  private renderDOM() {
+    this.hostElement.insertAdjacentElement('beforeend', this.sectionElement);
+  }
+}
 // ProjectInput Class
 class ProjectInput {
     templateElement: HTMLTemplateElement;
@@ -59,8 +90,8 @@ class ProjectInput {
       this.descriptionInputElement = this.formElement.querySelector('#description') as HTMLInputElement;
       this.peopleAmountInputElement = this.formElement.querySelector('#people') as HTMLInputElement;
 
-      this.configure();
-      this.attach();
+      this.addEventListeners();
+      this.renderDOM();
     }
   
     private gatherUserInput():[string, string, number] | void {
@@ -110,13 +141,15 @@ class ProjectInput {
       }
     }
   
-    private configure() {
+    private addEventListeners() {
       this.formElement.addEventListener('submit', this.submitHandler);
     }
   
-    private attach() {
+    private renderDOM() {
       this.hostElement.insertAdjacentElement('afterbegin', this.formElement);
     }
   }
   
 new ProjectInput();
+new ProjectList('Active');
+new ProjectList('Finished');
