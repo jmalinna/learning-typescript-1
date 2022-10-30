@@ -1,3 +1,21 @@
+// Validation
+interface IValidationText {
+  value: string;
+  required?: boolean;
+  minLength: number;
+  maxLength: number;
+}
+
+function isValidInput(validationInput: IValidationText) {
+  const inputLength = validationInput.value.trim().length;
+  const { required, minLength, maxLength } = validationInput;
+
+  if (!required) return true;
+  if (!inputLength) return false;
+  if (inputLength < minLength || inputLength > maxLength) return false;
+  return true;
+}
+
 // decorators
 function autoBind(
   _target: any,
@@ -48,16 +66,30 @@ class ProjectInput {
     private gatherUserInput():[string, string, number] | void {
       const titleValue = this.titleInputElement.value;
       const descriptionValue = this.descriptionInputElement.value;
-      const peopleAmountValue = this.peopleAmountInputElement.value;
+      const peopleAmountValue = Number(this.peopleAmountInputElement.value);
 
-      if ( titleValue.trim().length === 0 ||
-        descriptionValue.trim().length === 0 ||
-        peopleAmountValue.trim().length === 0
+      const titleValidationRequirements: IValidationText = {
+        value: titleValue,
+        required: true,
+        minLength: 5,
+        maxLength: 50,
+      };
+      const descriptionValidationRequirements: IValidationText = {
+        value: descriptionValue,
+        required: true,
+        minLength: 10,
+        maxLength: 50,
+      };
+
+      if (
+        !isValidInput(titleValidationRequirements) ||
+        !isValidInput(descriptionValidationRequirements) ||
+        peopleAmountValue < 1
       ) {
         alert('Please fill out all the inputs');
         return;
       } else {
-        return [titleValue, descriptionValue, Number(peopleAmountValue)];
+        return [titleValue, descriptionValue, peopleAmountValue];
       }
     }
   
