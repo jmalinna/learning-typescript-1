@@ -120,39 +120,20 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
       this.sectionElement
     );
   }
+
+  abstract configure():void;
+  abstract renderDOMContent(): void;
 }
 
 //ProjectList Class
-class ProjectList {
-  templateElement: HTMLTemplateElement;
-  hostElement: HTMLDivElement;
-  sectionElement: HTMLElement;
+class ProjectList extends Component<HTMLDivElement, HTMLElement>{
   assignedProjects: Project[];
 
   constructor(private type: 'Active' | 'Finished') {
-    this.templateElement = document.getElementById(
-      'project-list'
-    )! as HTMLTemplateElement;
-    this.hostElement = document.getElementById('app')! as HTMLDivElement;
+    super('project-list', 'app', false, `${type}-projects`);
     this.assignedProjects = [];
-    const importedNode = document.importNode(
-      this.templateElement.content,
-      true
-    );
-    this.sectionElement = importedNode.firstElementChild as HTMLElement;
-    this.sectionElement.id = `${this.type}-projects`;
-
-    projectState.addListener((projects: Project[]) => {
-      const relevantProjects = projects.filter((project) => {
-        if (this.type === 'Active') return project.status === ProjectStatus.Active;
-        return project.status === ProjectStatus.Finished;
-      });
-
-      this.assignedProjects = relevantProjects;
-      this.renderProjects();
-    });
   
-    this.renderDOM();
+    this.configure();
     this.renderDOMContent();
   }
 
@@ -167,13 +148,22 @@ class ProjectList {
     });
   }
 
-  private renderDOMContent() {
+  configure() {
+    projectState.addListener((projects: Project[]) => {
+      const relevantProjects = projects.filter((project) => {
+        if (this.type === 'Active') return project.status === ProjectStatus.Active;
+        return project.status === ProjectStatus.Finished;
+      });
+
+      this.assignedProjects = relevantProjects;
+      this.renderProjects();
+    });
+  }
+
+  renderDOMContent() {
     const listId = `${this.type}-project-list`;
     this.sectionElement.querySelector('ul')!.id = listId;
     this.sectionElement.querySelector('h2')!.textContent = this.type + ' projects';
-  }
-  private renderDOM() {
-    this.hostElement.insertAdjacentElement('beforeend', this.sectionElement);
   }
 }
 
