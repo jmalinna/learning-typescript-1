@@ -88,7 +88,7 @@ function autoBind(
 
 // Component Base Class
 abstract class Component<T extends HTMLElement, U extends HTMLElement> {
-  templateElement: HTMLTemplateElement;
+  element: HTMLTemplateElement;
   hostElement: T;
   sectionElement: U;
 
@@ -98,13 +98,13 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     isToInsertAtStart: boolean,
     newSectionElementId?: string,
   ) {
-    this.templateElement = document.getElementById(
+    this.element = document.getElementById(
       templateId
     )! as HTMLTemplateElement;
     this.hostElement = document.getElementById(hostElementId)! as T;
 
     const importedNode = document.importNode(
-      this.templateElement.content,
+      this.element.content,
       true
     );
     this.sectionElement = importedNode.firstElementChild as U;
@@ -228,15 +228,15 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement>{
     }
   
     private configure() {
-      this.titleInputElement = this.formElement.querySelector('#title') as HTMLInputElement;
-      this.descriptionInputElement = this.formElement.querySelector('#description') as HTMLInputElement;
-      this.peopleAmountInputElement = this.formElement.querySelector('#people') as HTMLInputElement;
+      this.titleInputElement = this.element.querySelector('#title') as HTMLInputElement;
+      this.descriptionInputElement = this.element.querySelector('#description') as HTMLInputElement;
+      this.peopleAmountInputElement = this.element.querySelector('#people') as HTMLInputElement;
 
-      this.formElement.addEventListener('submit', this.submitHandler);
+      this.element.addEventListener('submit', this.submitHandler);
     }
   
     private renderDOM() {
-      this.hostElement.insertAdjacentElement('afterbegin', this.formElement);
+      this.hostElement.insertAdjacentElement('afterbegin', this.element);
     }
   }
   
