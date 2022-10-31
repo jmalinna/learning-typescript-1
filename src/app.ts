@@ -87,7 +87,7 @@ function autoBind(
 };
 
 // Component Base Class
-class Component<T extends HTMLElement, U extends HTMLElement> {
+abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   templateElement: HTMLTemplateElement;
   hostElement: T;
   sectionElement: U;
@@ -95,6 +95,7 @@ class Component<T extends HTMLElement, U extends HTMLElement> {
   constructor(
     templateId: string,
     hostElementId: string,
+    isToInsertAtStart: boolean,
     newSectionElementId?: string,
   ) {
     this.templateElement = document.getElementById(
@@ -110,6 +111,14 @@ class Component<T extends HTMLElement, U extends HTMLElement> {
     if (newSectionElementId) {
       this.sectionElement.id = newSectionElementId;
     }
+    this.renderDOM(isToInsertAtStart);
+  }
+
+  private renderDOM(isToInsertAtBeginning: boolean) {
+    this.hostElement.insertAdjacentElement(
+      isToInsertAtBeginning ? 'afterbegin' : 'beforeend',
+      this.sectionElement
+    );
   }
 }
 
