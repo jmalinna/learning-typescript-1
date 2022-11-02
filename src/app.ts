@@ -199,7 +199,6 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement>
   @autoBind
   dragOverHandler(_: DragEvent): void {
     const listElement = this.element.querySelector('ul')!;
-    console.log('listElemen=', listElement);
     listElement.classList.add('droppable');
   }
 
@@ -207,8 +206,10 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement>
     
   }
 
+  @autoBind
   dragLeaveHandler(_: DragEvent): void {
-    
+    const listElement = this.element.querySelector('ul')!;
+    listElement.classList.remove('droppable');
   }
   configure() {
     this.element.addEventListener('dragover', this.dragOverHandler);
