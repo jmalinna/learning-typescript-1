@@ -164,10 +164,10 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement>
   }
 
   @autoBind
-  dragStartHandler(event: DragEvent): void {
+  dragStartHandler(_: DragEvent): void {
     
   }
-  dragEndHandler(event: DragEvent): void {
+  dragEndHandler(_: DragEvent): void {
     
   }
 
@@ -188,7 +188,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement>
   implements DragTarget {
   assignedProjects: Project[];
 
-  constructor(private type: 'active' | 'finished') {
+  constructor(private type: 'Active' | 'Finished') {
     super('project-list', 'app', false, `${type}-projects`);
     this.assignedProjects = [];
   
@@ -202,9 +202,11 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement>
     console.log('listElemen=', listElement);
     listElement.classList.add('droppable');
   }
+
   dropHandler(_: DragEvent): void {
     
   }
+
   dragLeaveHandler(_: DragEvent): void {
     
   }
@@ -215,7 +217,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement>
 
     projectState.addListener((projects: Project[]) => {
       const relevantProjects = projects.filter((project) => {
-        if (this.type === 'active') return project.status === ProjectStatus.Active;
+        if (this.type === 'Active') return project.status === ProjectStatus.Active;
         return project.status === ProjectStatus.Finished;
       });
 
@@ -310,5 +312,5 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
 }
   
 new ProjectInput();
-new ProjectList('active');
-new ProjectList('finished');
+new ProjectList('Active');
+new ProjectList('Finished');
